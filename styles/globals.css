@@ -15,11 +15,37 @@
 }
 
 .up-spinner.dark {
-    border-color: rgba(0,0,0,0.3);
+    border-color: rgba(0, 0, 0, 0.3);
     border-top-color: black;
 }
 
 @keyframes up-spin {
-    0% { transform: rotate(0deg); }
-    100% {transform: rotate(360deg); }
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+.parallax {
+    /* The image used */
+    background-image: url("https://www.weeklyvoice.com/wp-content/uploads/2020/12/Toronto-Waste-management-copy.jpg");
+
+    /* Set a specific height */
+    height: 250px;
+
+    /* Create the parallax scrolling effect */
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+.page-body>* {
+    position: fixed;
+    max-width: 65ch;
+    transform: scale(0%);
+    @apply transition
 }
