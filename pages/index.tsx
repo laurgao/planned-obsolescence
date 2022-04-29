@@ -9,9 +9,13 @@ import pentalobe3 from "../public/article/pentalobe/3.png";
 import pentalobe4 from "../public/article/pentalobe/4.jpg";
 import bgMainImg from "../public/bg/bg.png";
 import carImg from "../public/bg/car.png";
+import signImg from "../public/bg/sign.png";
 import skyImg from "../public/bg/sky.png";
+import trashPile2Img from "../public/bg/trash-2.png";
+import trashPileImg from "../public/bg/trash.png";
 
 const nBgImages = 10;
+const bgScaleFactor = 0.10625; // each subsequent bg image is scaled down by this factor.
 
 export default function Home() {
     const [pentalobeSrc, setPentalobeSrc] = useState(pentalobe1);
@@ -81,7 +85,7 @@ export default function Home() {
                     // start fading out when its own scale = 200. fully out when it's 300.
                     if (80 > scalio && scalio > 35) {
                         opacity = (scalio - 80 + 45) / 45;
-                    } else if (200 > scalio && scalio > 90) {
+                    } else if (200 >= scalio && scalio >= 80) {
                         opacity = 1;
                     } else if (300 > scalio && scalio > 200) {
                         opacity = (300 - scalio) / 100;
@@ -97,11 +101,10 @@ export default function Home() {
                 }
 
                 let bgImgScales = [];
-                const f = 0.10625;
                 for (let i = 1; i <= nBgImages; i++) {
                     // n+1
                     // Math.pow(2, n)
-                    const scale = i === 1 ? Math.pow(2, n) : bgImgScales[bgImgScales.length - 1] * f;
+                    const scale = i === 1 ? Math.pow(2, n) : bgImgScales[bgImgScales.length - 1] * bgScaleFactor;
                     bgImgScales.push(scale);
                     const currBgImage = document.getElementById(`bg-${i}`);
                     if (currBgImage) {
@@ -132,13 +135,15 @@ export default function Home() {
                 .reverse()
                 .map((i) => {
                     let n = i + 1;
-                    const f = 0.10625;
-                    let isNextImage100Scale: boolean = Math.pow(2, nWindowsScrolled) * Math.pow(f, i + 1) > 1;
-                    if (isNextImage100Scale) {
-                        console.log("Bg image #" + n + " is no longer being rendered! Phew 😅");
-                    }
-                    return !isNextImage100Scale ? (
-                        <div className="fixed inset-0" style={{ zIndex: -nBgImages + i - 1 }}>
+                    let isNextImage100Scale: boolean = Math.pow(2, nWindowsScrolled) * Math.pow(bgScaleFactor, i + 1) > 1;
+                    let currImgScale = Math.pow(2, nWindowsScrolled) * Math.pow(bgScaleFactor, i);
+                    // if (currImgScale < 0.01) {
+                    //     console.log("Bg image #" + n + " is too small so it is not being rendered! Phew 😅");
+                    // }
+                    return isNextImage100Scale || currImgScale < 0.01 ? (
+                        <></>
+                    ) : (
+                        <div className="fixed inset-0" style={{ zIndex: -nBgImages + i - 3 }}>
                             <Image
                                 src={bgMainImg}
                                 className="w-screen h-screen"
@@ -147,15 +152,26 @@ export default function Home() {
                                 // 42.9259 was too high
                             ></Image>
                         </div>
-                    ) : (
-                        <></>
                     );
                 })}
+            {/* translucent black overlay */}
+            <div style={{ zIndex: -1 }} className="fixed inset-0 w-screen h-screen bg-opacity-20 bg-black" />
             {/* Sky is below all bg images. */}
-            <div className="fixed inset-0" style={{ zIndex: -nBgImages - 2 }}>
+            <div className="fixed inset-0" style={{ zIndex: -nBgImages - 4 }} id="sky">
                 <Image src={skyImg} className="w-screen h-screen"></Image>
             </div>
-            <div className="fixed bottom-10" style={{ left: `calc(50% - 100px)`, zIndex: -1 }}>
+            {/* Auxillary props are above all bgs but below car. */}
+            <div className="fixed inset-0" style={{ zIndex: -3 }}>
+                <PropImage nWindowsScrolled={nWindowsScrolled} src={signImg} position={1.2} />
+            </div>
+            <div className="fixed inset-0" style={{ zIndex: -3 }}>
+                <PropImage src={trashPileImg} nWindowsScrolled={nWindowsScrolled} position={1.5}></PropImage>
+            </div>
+            <div className="fixed inset-0" style={{ zIndex: -3 }}>
+                <PropImage src={trashPile2Img} nWindowsScrolled={nWindowsScrolled} position={4}></PropImage>
+            </div>
+
+            <div className="fixed bottom-10" style={{ left: `calc(50% - 100px)`, zIndex: -2 }}>
                 {/* width of car is 200px. subtract half of that from 50% of screen width so car is at center. */}
                 <Image src={carImg}></Image>
             </div>
@@ -393,3 +409,35 @@ export default function Home() {
         </>
     );
 }
+
+const scaleToBlur = (scale) => {
+    let opacity;
+    const maxBlur = 0.3;
+    if (0.7 > scale && scale > 0.3) {
+        opacity = (maxBlur * (scale - 0.7 + 0.4)) / 0.4;
+    } else if (1 >= scale && scale >= 0.7) {
+        opacity = maxBlur;
+    } else if (1.4 > scale && scale > 1) {
+        opacity = (maxBlur * (1.4 - scale)) / 0.4;
+    } else {
+        opacity = 0;
+    }
+    // you want the perfectly nonblurred range to be 0.7 - 1
+    // fully blurred at 1.4
+    let blurValue = maxBlur - opacity;
+    return blurValue;
+};
+
+const PropImage = ({ src, nWindowsScrolled, position }: { src; nWindowsScrolled: number; position: number }) => {
+    // position: number of bgs down for it to be linked to.
+    const scale = Math.pow(2, nWindowsScrolled) * Math.pow(bgScaleFactor, position);
+    const blurValue = scaleToBlur(scale);
+    return (
+        <Image
+            src={src}
+            className="w-screen h-screen"
+            id="sign"
+            style={{ transform: `scale(${scale})`, transformOrigin: "52.5573% 42.8259%", filter: `blur(${blurValue}rem)` }}
+        ></Image>
+    );
+};
