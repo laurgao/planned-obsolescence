@@ -49,3 +49,31 @@
     transform: scale(0%);
     @apply transition
 }
+
+.rotate {
+    animation: up-spin 1s linear infinite;
+}
+
+.floating {
+    animation: floating 10s cubic-bezier(0.25, 0.46, 0.45, 0.94) infinite;
+}
+
+@keyframes floating {
+    0% {
+        transform: translateY(-10px);
+    }
+
+    50% {
+        transform: translateY(10px);
+    }
+
+    100% {
+        transform: translateY(-10px);
+    }
+}
+
+.prose a {
+    /* overriding tailwind plugin defaults. */
+    font-weight: inherit !important;
+    color: inherit !important;
+}
