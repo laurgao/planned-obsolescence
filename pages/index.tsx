@@ -1,28 +1,34 @@
+import { MapIcon, VolumeOffIcon, VolumeUpIcon } from "@heroicons/react/outline";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import ArticleSection2 from "../components/ArticleSection2";
+import { BlueBox } from "../components/BlueBox";
 import Filler from "../components/Filler";
+import Button from "../components/headless/Button";
 import Container from "../components/headless/Container";
-import pentalobe1 from "../public/article/pentalobe/1.jpg";
-import pentalobe2 from "../public/article/pentalobe/2.png";
-import pentalobe3 from "../public/article/pentalobe/3.png";
-import pentalobe4 from "../public/article/pentalobe/4.jpg";
-import bgMainImg from "../public/bg/bg.png";
-import carImg from "../public/bg/car.png";
-import signImg from "../public/bg/sign.png";
-import skyImg from "../public/bg/sky.png";
-import trashPile2Img from "../public/bg/trash-2.png";
-import trashPileImg from "../public/bg/trash.png";
+import pentalobe1 from "../images/1/pentalobe/1.jpg";
+import pentalobe2 from "../images/1/pentalobe/2.png";
+import pentalobe3 from "../images/1/pentalobe/3.png";
+import pentalobe4 from "../images/1/pentalobe/4.jpg";
+import bgMainImgFartherBuildings from "../images/bg/bg-buildings-farther.png";
+import bgMainImgFlipppedBuildings from "../images/bg/bg-buildings-flipped.png";
+import bgMainImg from "../images/bg/bg.png";
+import carImg from "../images/bg/car.png";
+import signImg from "../images/bg/sign.png";
+import skyImg from "../images/bg/sky.png";
+import trashPile2Img from "../images/bg/trash-2.png";
+import trashPileImg from "../images/bg/trash.png";
 import { paragraphScale, scaleToOpacity } from "../utils/scroll";
-
 const bgScaleFactor = 0.10625; // each subsequent bg image is scaled down by this factor.
-const nScreens = 36.6; // the height of this page is equal to the height of how many viewport heights.
-const nBgImages = Math.ceil((nScreens * Math.log(0.5)) / Math.log(bgScaleFactor));
+const nScreens = 50; // the height of this page is equal to the height of how many viewport heights.
+const nBgImages = Math.ceil((nScreens * Math.log(0.5)) / Math.log(bgScaleFactor)) + 1; // plus 1 so it looks like road still keeps going on
 
 export default function Home() {
     const [pentalobeSrc, setPentalobeSrc] = useState(pentalobe1);
     const [titleScale, setTitleScale] = useState(100);
     const [nWindowsScrolled, setNWindowsScrolled] = useState<number>(0); // because can't use `window` outside useEffect
+    const [isMuted, setIsMuted] = useState(false);
+    const [isMapOpen, setIsMapOpen] = useState(false);
 
     useEffect(() => {
         const img = document.querySelector("#pentalobe-img");
@@ -84,8 +90,6 @@ export default function Home() {
 
                 let bgImgScales = [];
                 for (let i = 1; i <= nBgImages; i++) {
-                    // n+1
-                    // Math.pow(2, n)
                     const scale = i === 1 ? Math.pow(2, n) : bgImgScales[bgImgScales.length - 1] * bgScaleFactor;
                     bgImgScales.push(scale);
                     const currBgImage = document.getElementById(`bg-${i}`);
@@ -100,13 +104,58 @@ export default function Home() {
         return () => document.removeEventListener("scroll", fn);
     });
 
+    const iconSize = 36;
+    const gap = 16; // this variable does not control gap size, is j an indicator of it.
+    const triangleWidth = 40; // same as ^
+    const [x, setX] = useState(null);
     return (
         <>
-            {nWindowsScrolled > 5 ? (
+            {isMapOpen && <div className="w-screen h-screen fixed inset-0 bg-black bg-opacity-50" style={{ zIndex: 51 }}></div>}
+            <div className="w-screen h-48 fixed inset-0 p-4 text-white z-50 flex gap-4">
+                <Button
+                    onClick={() => setIsMuted((prev) => !prev)}
+                    className="opacity-60 hover:opacity-70 transition"
+                    onMouseOver={(e) => setX(iconSize / 2)}
+                    onMouseLeave={() => setX(false)}
+                >
+                    {isMuted ? <VolumeOffIcon width={iconSize} /> : <VolumeUpIcon width={iconSize} />}
+                </Button>
+                <Button
+                    onClick={() => setIsMapOpen(true)}
+                    className="opacity-60 hover:opacity-70 transition"
+                    onMouseOver={(e) => setX(iconSize + gap + iconSize / 2)}
+                    onMouseLeave={() => setX(false)}
+                >
+                    <MapIcon width={iconSize} />
+                </Button>
+                <div
+                    className="absolute transition delay-150 mt-10"
+                    style={{ transformOrigin: "top center", transform: `translateX(${-triangleWidth / 2}px) ${x ? `scale(1)` : "scale(0)"}` }}
+                >
+                    {/* popup description */}
+                    <div
+                        className="w-0 h-0 transition delay-150"
+                        style={{
+                            borderRight: "20px solid transparent",
+                            borderLeft: "20px solid transparent",
+                            borderBottom: "32px solid black",
+                            transform: `translateX(${x}px)`, // half of rectangle width
+                        }}
+                    ></div>
+                    <div className="w-48 h-10 bg-black rounded-full flex items-center justify-center leading-none">
+                        Music {isMuted ? "on" : "off"}
+                    </div>
+                </div>
+            </div>
+            {nWindowsScrolled > 3 ? (
                 <></>
             ) : (
-                <header className="w-screen h-screen flex items-center justify-center fixed inset-0 text-white z-50">
-                    <div id="title" style={{ transform: `scale(${titleScale}%)` }} className="text-center">
+                <header className="w-screen h-screen flex items-center justify-center fixed inset-0 text-white z-40">
+                    <div
+                        id="title"
+                        style={{ transform: `scale(${titleScale}%)`, opacity: nWindowsScrolled > 2.5 ? -2 * nWindowsScrolled + 6 : 1 }}
+                        className="text-center"
+                    >
                         <h1 className="text-5xl font-bold">Planned Obsolescence</h1>
                         <p className="opacity-50 text-xl">Laura Gao • April 18, 2022 • 5 min read</p>
                         <p className="opacity-30 hover:opacity-40 mt-5 floating transition inline-block">Scroll down to drive forward</p>
@@ -117,17 +166,18 @@ export default function Home() {
                 .reverse()
                 .map((i) => {
                     let n = i + 1;
-                    let isNextImage100Scale: boolean = Math.pow(2, nWindowsScrolled) * Math.pow(bgScaleFactor, i + 1) > 1;
+                    let nextImageScale = Math.pow(2, nWindowsScrolled) * Math.pow(bgScaleFactor, i + 1);
                     let currImgScale = Math.pow(2, nWindowsScrolled) * Math.pow(bgScaleFactor, i);
-                    // if (currImgScale < 0.01) {
-                    //     console.log("Bg image #" + n + " is too small so it is not being rendered! Phew 😅");
-                    // }
-                    return isNextImage100Scale || currImgScale < 0.01 ? (
+                    let threshold = 6; // first img where um farther buildings when 0 indexed.
+                    let doesNextImageFullyCoverScreen: boolean = i !== threshold - 1 && i !== threshold ? nextImageScale > 1 : nextImageScale > 2.5;
+                    // buildings on the other side at 6
+                    // at 7 and forward: buildings on same side but farther away.
+                    return doesNextImageFullyCoverScreen || currImgScale < 0.01 ? (
                         <></>
                     ) : (
-                        <div className="fixed inset-0" style={{ zIndex: -nBgImages + i - 3 }}>
+                        <div className="fixed inset-0" style={{ zIndex: -nBgImages + i - 3 }} key={i}>
                             <Image
-                                src={bgMainImg}
+                                src={i < threshold ? bgMainImg : i === threshold ? bgMainImgFlipppedBuildings : bgMainImgFartherBuildings}
                                 className="w-screen h-screen"
                                 id={`bg-${n}`}
                                 style={{ transformOrigin: "52.5573% 42.8259%" }}
@@ -293,170 +343,12 @@ const PropImage = ({
     const scale = Math.pow(2, nWindowsScrolled) * Math.pow(bgScaleFactor, position);
     const blurValue = scaleToBlurCallback(scale);
     // only render image if scale is within range
-    return scale > 0.01 && scale < 500 ? (
+    return scale > 0.01 && scale < 5 ? (
         <Image
             src={src}
             className="w-screen h-screen"
-            id="sign"
             style={{ transform: `scale(${scale})`, transformOrigin: "52.5573% 42.8259%", filter: `blur(${blurValue}rem)` }}
         ></Image>
-    ) : (
-        <></>
-    );
-};
-
-export const BlueBox = ({ nWindowsScrolled }) => {
-    // const [nParagraphsBeforeThis, setNParagraphsBeforeThis] = useState(0);
-    const [heightOfBlueBox, setHeightOfBlueBox] = useState(0);
-    const [opacity, setOpacity] = useState(0);
-    const [bgOpacity, setBgOpacity] = useState(0);
-    const [yShift, setYShift] = useState(0);
-    const [scale, setScale] = useState(0);
-
-    const maxBgOpacity = 0.2;
-    const marginTop = 6 * 4; // in px
-    useEffect(() => {
-        const article = document.querySelector("#article");
-        const nParagraphsBeforeThis = article.childNodes.length;
-        // setNParagraphsBeforeThis(article.childNodes.length);
-
-        const blueBox = document.querySelector("#blue-box");
-        // if (blueBox) setHeightOfBlueBox(blueBox.offsetHeight);
-        let h;
-        if (blueBox) {
-            h = blueBox.offsetHeight;
-            setHeightOfBlueBox(h);
-        }
-        const defaultScale = paragraphScale(nParagraphsBeforeThis + 1, nWindowsScrolled, -1);
-        let scale;
-        let yShift;
-        let bgOpacity;
-        let opacity;
-
-        if (defaultScale < 1) {
-            scale = defaultScale;
-            // y shift here scales linearly with the scale.
-            let vh = 0;
-            if (typeof window !== "undefined") {
-                vh = window.innerHeight;
-            } else {
-                console.error("window is undefined");
-            }
-
-            const t = 0.25; // threshold scale at which shifting starts.
-            if (defaultScale < t) {
-                yShift = vh / 2 - (h || heightOfBlueBox) / 2 - marginTop;
-            } else {
-                yShift = (vh / 2 - (h || heightOfBlueBox) / 2 - marginTop) * (1 - (defaultScale - t) / (1 - t));
-            }
-        } else {
-            scale = 1;
-            // yshift here scales logarithmetically from scale (which scales exponentially) and is 0 at scale = 1
-            yShift = -Math.log(defaultScale) * 500;
-        }
-
-        const lb = 0.01; // lower bound of opacity
-        const ub = 0.5; // upper bound of opacity
-        if (scale > ub) {
-            opacity = 1;
-        } else if (scale > lb) {
-            // go from 0 to 1 in range 0.1 - 0.3
-            opacity = (scale - lb) / (ub - lb);
-        } else {
-            opacity = 0;
-        }
-        if (scale > 0.5) {
-            bgOpacity = maxBgOpacity;
-        } else if (scale > 0.2) {
-            // go from 0 to maxBgOpacity in range 0.2 - 0.5
-            bgOpacity = (maxBgOpacity * (scale - 0.2)) / 0.3;
-        } else {
-            bgOpacity = 0;
-        }
-        setScale(scale);
-        setYShift(yShift);
-        setOpacity(opacity);
-        setBgOpacity(bgOpacity);
-    });
-
-    // don't render if yshift is too large such that the blue box is offscreen
-    return Math.abs(yShift) < heightOfBlueBox + marginTop ? (
-        // this marginTop makes this text start [that amount of pixels] below the top of the screen when at 100% scale
-        <div
-            className="fixed inset-0 prose prose-invert mx-auto p-10 rounded-md"
-            // 30 58 138 is blue-900
-            style={{
-                transform: `translate(0px, ${yShift}px) scale(${scale})`,
-                height: "max-content",
-                marginTop: marginTop,
-                backgroundColor: `rgba(30, 58, 138, ${bgOpacity})`,
-                opacity: opacity,
-            }}
-            id="blue-box"
-        >
-            <p className="uppercase -mb-6 text-xs font-bold opacity-40">Sidenote</p>
-            <p id="4787d1a3-2c86-4578-8803-ef50f31edb67" className="">
-                <strong>Blue Box: Planned Obsolescence, Price Collusion, and Monopolies</strong>
-            </p>
-            <p id="44395367-6103-4e70-84bd-0c5e94d14306" className="-mt-5 opacity-80 text-sm">
-                <em>3 practices that capitalism suckers hate</em>
-            </p>
-            <p id="f93d7956-f5b2-4cc2-b91d-6cfb4fc861bd" className="">
-                When I first heard of planned obsolescence, it deeply unsettled me—it completely violated all intuition about the cherished free
-                market that I had grown used to. The essence of capitalism is that producers try to make the best quality product that they can, and
-                consumers will pick the product that is the highest quality with the lowest price, forcing producers to compete with each other to
-                make the best product possible. Through <em>natural selection</em>, with companies that appeal to consumers living on to reproduce
-                and companies who failed to do so dying, the products that eventually succeed are the ones that consumers like the best. Capitalism
-                is supposed to cause the best products to surface to the top, which is beneficial for consumers (the products consumers can purchase
-                just keep getting better and better over time).
-            </p>
-            <p id="a15fd284-b68f-4b24-8488-22dd8295da16" className="">
-                Planned obsolescence completely violates all that. When mega-corporations get together to agree to shorten the lifespan of a light
-                bulb, they get successful because they intentionally produced a <strong>worse</strong> quality product without lowering the price.
-                Furthermore, consumers are the one who lose in this situation: having to pay more than 2 times more for the same product. The free
-                market fails at one of its core purposes: bringing out the best products for the consumers.
-            </p>
-            <p id="3f021ea0-91ae-4a8a-a39e-c4e7c2ec89ed" className="">
-                <em>Hmm, companies who form agreements to cheat the free market and hurt consumers to bring themselves more profit?</em> That sounds
-                suspiciously similar to price collusion.
-            </p>
-            <p id="4415c3c7-9766-49b6-ad20-619b3f6dc751" className="">
-                Price collusion is when a few companies that control the whole market combined get together, and form an agreement to raise prices.
-                e.g. if all bread manufacturers (dumpsters, ...) decided to simultaneously double the price of bread today. You don&#x27;t like the
-                higher bread prices? Well too bad for you, every loaf of bread you find at your local Food Basics will be made by one of these
-                companies taking part in doubling their bread price. Too bad for you, you have to pay 2x the cost for the same item, because a few
-                big corporations wanted the extra profit. You think you meager consumer can win against a company with literal millions of dollars?
-            </p>
-            <p id="f13466ce-a6e4-4d78-9fad-0b0757ea5564" className="">
-                However, there is a crucial difference between price collusion and planned obsolescence: price collusion is <em>illegal</em>. It was
-                outlawed citing reasons as &quot;limiting the free market,&quot; &quot;against the spirit of competition&quot;, &quot;hurting
-                consumers&quot;, all of that. Well, planned obsolescence does all of that too!
-            </p>
-            <p id="1d97c164-26c5-4fd0-bfff-7a48a571b6d8" className="">
-                Same with monopolies - they are outlawed for the same reason.
-            </p>
-            <p id="aefbeddd-77bc-42b2-92a8-c0dba56e1080" className="">
-                Similarities between monopolies, price collusion, and planned obsolescence:
-            </p>
-            <ul id="07acfd1b-86c4-489a-a407-692a5a2ee34b" className="bulleted-list">
-                <li style={{ listStyleType: "disc" }}>big company/companies that control the market sign an agreement</li>
-            </ul>
-            <ul id="25e6fcd9-a1f9-4af3-b535-8cce1d16d50d" className="bulleted-list">
-                <li style={{ listStyleType: "disc" }}>exploitative to consumers</li>
-            </ul>
-            <ul id="206cc4a2-cc13-4a2e-b4d0-5c12ad2f23be" className="bulleted-list">
-                <li style={{ listStyleType: "disc" }}>companies take in a lot more revenue</li>
-            </ul>
-            <ul id="2a1b1e45-6ba1-4845-b3a2-ca03614d2ceb" className="bulleted-list">
-                <li style={{ listStyleType: "disc" }}>against the spirit of free market competition</li>
-            </ul>
-            <p id="2f5112b6-c723-42cb-a25c-d673e9cc9dd9" className="">
-                <em>Hint hint if you&#x27;re a lawmaker reading this</em>
-            </p>
-            <p id="de7c4cf3-1e92-48f8-9c93-ecce81c5fcf8" className="">
-                End of blue box
-            </p>
-        </div>
     ) : (
         <></>
     );

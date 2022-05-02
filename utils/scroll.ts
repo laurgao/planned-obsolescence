@@ -1,9 +1,10 @@
 export const paragraphScale = (i: number, n: number, offset: number): number => {
-    const scale = (s) => (s < 0.5 ? Math.pow(2, s) - 1 : Math.pow(100, s - 0.69));
+    const scale = (s) => Math.pow(100, s - 0.69); // 1
+    // const scale = (s) => (s < 0.5 ? Math.pow(2, s) - 1 : Math.pow(100, s - 0.69)); doing this makes the signpost suddenly disappear to nothing when you hit the threshold ahhhhh which is ok for text, actually it's great for text, but not for the signpot.
     let f = 0.5; // switch between paragraphs every half page scroll.
     // const scalio = h < (i + 1) * 1000 ? 0 : ((h - (i + 1) * 1000) / window.innerHeight) * 100;
     let nn = (n - i) * f + offset;
-    return nn <= 0 ? 0 : scale(nn);
+    return scale(nn) <= 0 ? 0 : scale(nn); // 1
 };
 
 export const scaleToOpacity = (scale: number): number => {

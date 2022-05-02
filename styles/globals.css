@@ -50,6 +50,12 @@
     @apply transition
 }
 
+.page-body-2>* {
+    position: fixed;
+    max-width: 65ch;
+    @apply transition
+}
+
 .rotate {
     animation: up-spin 1s linear infinite;
 }
@@ -76,4 +82,9 @@
     /* overriding tailwind plugin defaults. */
     font-weight: inherit !important;
     color: inherit !important;
+}
+
+.precedes-unruly-image+span {
+    position: fixed !important;
+    top: 0;
 }
