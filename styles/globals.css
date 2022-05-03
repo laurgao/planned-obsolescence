@@ -87,4 +87,13 @@
 .precedes-unruly-image+span {
     position: fixed !important;
     top: 0;
+    z-index: -2;
+}
+
+.nav-item:hover+.nav-dropdown, .nav-dropdown:hover {
+    display: flex
+}
+
+.credits a {
+    text-decoration: underline;
 }

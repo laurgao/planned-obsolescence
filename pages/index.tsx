@@ -1,17 +1,15 @@
-import { MapIcon, VolumeOffIcon, VolumeUpIcon } from "@heroicons/react/outline";
+import { HomeIcon } from "@heroicons/react/solid";
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ArticleSection2 from "../components/ArticleSection2";
 import { BlueBox } from "../components/BlueBox";
 import Filler from "../components/Filler";
 import Button from "../components/headless/Button";
 import Container from "../components/headless/Container";
-import pentalobe1 from "../images/1/pentalobe/1.jpg";
-import pentalobe2 from "../images/1/pentalobe/2.png";
-import pentalobe3 from "../images/1/pentalobe/3.png";
-import pentalobe4 from "../images/1/pentalobe/4.jpg";
+import SoundController from "../components/SoundController";
 import bgMainImgFartherBuildings from "../images/bg/bg-buildings-farther.png";
 import bgMainImgFlipppedBuildings from "../images/bg/bg-buildings-flipped.png";
+import bgLast from "../images/bg/bg-last.png";
 import bgMainImg from "../images/bg/bg.png";
 import carImg from "../images/bg/car.png";
 import signImg from "../images/bg/sign.png";
@@ -19,48 +17,36 @@ import skyImg from "../images/bg/sky.png";
 import trashPile2Img from "../images/bg/trash-2.png";
 import trashPileImg from "../images/bg/trash.png";
 import { paragraphScale, scaleToOpacity } from "../utils/scroll";
+
 const bgScaleFactor = 0.10625; // each subsequent bg image is scaled down by this factor.
 const nScreens = 50; // the height of this page is equal to the height of how many viewport heights.
-const nBgImages = Math.ceil((nScreens * Math.log(0.5)) / Math.log(bgScaleFactor)) + 1; // plus 1 so it looks like road still keeps going on
+const nBgImages = Math.ceil((nScreens * Math.log(0.5)) / Math.log(bgScaleFactor));
 
 export default function Home() {
-    const [pentalobeSrc, setPentalobeSrc] = useState(pentalobe1);
     const [titleScale, setTitleScale] = useState(100);
     const [nWindowsScrolled, setNWindowsScrolled] = useState<number>(0); // because can't use `window` outside useEffect
-    const [isMuted, setIsMuted] = useState(false);
-    const [isMapOpen, setIsMapOpen] = useState(false);
-
+    const [isPlayingMusic, setIsPlayingMusic] = useState(true);
+    const audio = useRef<HTMLAudioElement | undefined>();
     useEffect(() => {
-        const img = document.querySelector("#pentalobe-img");
-        // console.log(img.offsetTop, img.offsetHeight);
-
+        // audio.current = typeof Audio !== "undefined" ? new Audio("music.mp3") : undefined
+        if (typeof Audio !== "undefined" && !audio.current) {
+            audio.current = new Audio("music.mp3");
+            audio.current.volume = 0.1;
+        }
         const fn = () => {
-            if (img) {
-                // img.offsetTop, img.offsetHeight, img.scrollTop, window.pageYOffset,
-                // img.getBoundingClientRect().top > window.innerHeight -> we have not yet scrolled to the image.
-                // const h = img.getBoundingClientRect().top + img.getBoundingClientRect().height / 2;
-                const h = window.scrollY;
-                if (h > (window.innerHeight * 3) / 4) {
-                    // we have not yet scrolled to the image.
-                    setPentalobeSrc(pentalobe1);
-                } else if (h > window.innerHeight / 2) {
-                    setPentalobeSrc(pentalobe2);
-                } else if (h > window.innerHeight / 4) {
-                    setPentalobeSrc(pentalobe3);
-                } else {
-                    setPentalobeSrc(pentalobe4);
-                }
-                // console.log(window.innerHeight, h);
+            if (audio.current) {
+                audio.current.play();
             }
         };
-        document.addEventListener("scroll", fn);
-        return () => document.removeEventListener("scroll", fn);
-    });
+        // document.addEventListener("scroll", fn);
+        document.addEventListener("mousemove", fn);
+        return () => document.removeEventListener("mousemove", fn);
+    }, [typeof Audio]);
+    // const [isPlayingMusic, setIsPlayingMusic] = useAudio("music.mp3", true);
 
     useEffect(() => {
         const title = document.querySelector("#title");
         // console.log(img.offsetTop, img.offsetHeight);
-        const bigNumber = 100; // bigger than number of paragraphs
 
         const article = document.querySelector("#article");
         const fn = () => {
@@ -104,46 +90,50 @@ export default function Home() {
         return () => document.removeEventListener("scroll", fn);
     });
 
-    const iconSize = 36;
-    const gap = 16; // this variable does not control gap size, is j an indicator of it.
-    const triangleWidth = 40; // same as ^
-    const [x, setX] = useState(null);
     return (
         <>
-            {isMapOpen && <div className="w-screen h-screen fixed inset-0 bg-black bg-opacity-50" style={{ zIndex: 51 }}></div>}
-            <div className="w-screen h-48 fixed inset-0 p-4 text-white z-50 flex gap-4">
-                <Button
-                    onClick={() => setIsMuted((prev) => !prev)}
-                    className="opacity-60 hover:opacity-70 transition"
-                    onMouseOver={(e) => setX(iconSize / 2)}
-                    onMouseLeave={() => setX(false)}
-                >
-                    {isMuted ? <VolumeOffIcon width={iconSize} /> : <VolumeUpIcon width={iconSize} />}
+            <SoundController isPlayingMusic={isPlayingMusic} setIsPlayingMusic={setIsPlayingMusic} white={true} />
+            {/* navbar */}
+            <div className={`flex z-50 w-full inset-0 h-16 items-center px-6 transition absolute text-white `}>
+                <Button href="/">
+                    <HomeIcon className="hover:opacity-80 opacity-50 transition" width={36} />
                 </Button>
-                <Button
-                    onClick={() => setIsMapOpen(true)}
-                    className="opacity-60 hover:opacity-70 transition"
-                    onMouseOver={(e) => setX(iconSize + gap + iconSize / 2)}
-                    onMouseLeave={() => setX(false)}
-                >
-                    <MapIcon width={iconSize} />
-                </Button>
-                <div
-                    className="absolute transition delay-150 mt-10"
-                    style={{ transformOrigin: "top center", transform: `translateX(${-triangleWidth / 2}px) ${x ? `scale(1)` : "scale(0)"}` }}
-                >
-                    {/* popup description */}
-                    <div
-                        className="w-0 h-0 transition delay-150"
-                        style={{
-                            borderRight: "20px solid transparent",
-                            borderLeft: "20px solid transparent",
-                            borderBottom: "32px solid black",
-                            transform: `translateX(${x}px)`, // half of rectangle width
-                        }}
-                    ></div>
-                    <div className="w-48 h-10 bg-black rounded-full flex items-center justify-center leading-none">
-                        Music {isMuted ? "on" : "off"}
+                <div className="ml-auto flex gap-4 h-full items-center font-medium opacity-50">
+                    <div className="h-full">
+                        <Button
+                            href="/part-2"
+                            className="h-full flex items-center px-4 transition nav-item ml-auto hover:bg-opacity-20 hover:bg-gray-50"
+                            style={{ width: 42.69 + 32 }} // the width found experimentally, not responsive to change in button content so not ideal.
+                        >
+                            Part 2
+                        </Button>
+                        <div className="nav-dropdown hidden h-12 items-center transition bg-opacity-10 bg-gray-50 hover:bg-opacity-20 px-4">
+                            <Button href="/part-2#solution">What can we do?</Button>
+                        </div>
+                    </div>
+
+                    <div className="h-full">
+                        <Button
+                            href="/part-3"
+                            className="h-full flex items-center px-4 transition nav-item ml-auto hover:bg-opacity-20 hover:bg-gray-50"
+                            style={{ width: 42.69 + 32 }} // the width found experimentally, not responsive to change in button content so not ideal.
+                        >
+                            Part 3
+                        </Button>
+                        <div className="nav-dropdown hidden flex-col items-center ">
+                            <Button
+                                href="/part-3"
+                                className="w-full h-12 flex items-center transition bg-opacity-10 bg-gray-50 hover:bg-opacity-20 px-4"
+                            >
+                                The Global Problem
+                            </Button>
+                            <Button
+                                href="/part-3#solution"
+                                className="w-full h-12 flex items-center transition bg-opacity-10 bg-gray-50 hover:bg-opacity-20 px-4"
+                            >
+                                Solutions
+                            </Button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -177,7 +167,15 @@ export default function Home() {
                     ) : (
                         <div className="fixed inset-0" style={{ zIndex: -nBgImages + i - 3 }} key={i}>
                             <Image
-                                src={i < threshold ? bgMainImg : i === threshold ? bgMainImgFlipppedBuildings : bgMainImgFartherBuildings}
+                                src={
+                                    i < threshold
+                                        ? bgMainImg
+                                        : i === threshold
+                                        ? bgMainImgFlipppedBuildings
+                                        : i === nBgImages - 1
+                                        ? bgLast
+                                        : bgMainImgFartherBuildings
+                                }
                                 className="w-screen h-screen"
                                 id={`bg-${n}`}
                                 style={{ transformOrigin: "52.5573% 42.8259%" }}
@@ -188,7 +186,7 @@ export default function Home() {
                     );
                 })}
             {/* translucent black overlay */}
-            <div style={{ zIndex: -1 }} className="fixed inset-0 w-screen h-screen bg-opacity-20 bg-black" />
+            {/* <div style={{ zIndex: -1 }} className="fixed inset-0 w-screen h-screen bg-opacity-20 bg-black" /> */}
             {/* Sky is below all bg images. */}
             <div className="fixed inset-0" style={{ zIndex: -nBgImages - 4 }} id="sky">
                 <Image src={skyImg} className="w-screen h-screen" priority={true}></Image>
@@ -237,7 +235,7 @@ export default function Home() {
                         <p id="52bab417-0cca-4f26-80a8-078d66607657" className="text-center text-2xl">
                             Let&#x27;s zoom out.
                         </p>
-                        <p id="430cc8fc-a6df-4e3c-8ee0-c7ccd3ab5341" className="">
+                        <p className="">
                             In 1925, there were about 8 light bulb manufacturers who together controlled all the light bulbs flowing out of stores.
                             These eight companies came together for a meeting, and asked, how can we can double the amount of light bulbs that
                             consumers have to purchase? That will double the revenue that we bring in. The 8 companies collaborated to launch their

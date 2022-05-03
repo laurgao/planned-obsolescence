@@ -1,34 +1,27 @@
 import Link from "next/link";
 
-export type ButtonProps = (React.HTMLProps<HTMLButtonElement> | React.HTMLProps<HTMLAnchorElement>)
-    & {isLoading?: boolean, containerClassName?: string, childClassName?: string,};
+export type ButtonProps = (React.HTMLProps<HTMLButtonElement> | React.HTMLProps<HTMLAnchorElement>) & {
+    containerClassName?: string;
+    childClassName?: string;
+};
 
 export default function Button(props: ButtonProps) {
-    const {href, isLoading, children, containerClassName, disabled} = props;
-    let domProps = {...props};
-    delete domProps.containerClassName;
+    const { href, className, children, containerClassName, disabled } = props;
+    let domProps = { ...props };
+    delete domProps.className;
     delete domProps.childClassName;
 
-    return (
-        <div className={`relative inline-block ${containerClassName || ""} ${disabled ? "opacity-25 cursor-not-allowed" : ""}`}>
-            {href ? (
-                <Link href={href}>
-                    {/* @ts-ignore */}
-                    <a {...domProps}>
-                        <div className={(isLoading ? "invisible " : "") + (props.childClassName || "")}>
-                            {children}
-                        </div>
-                    </a>
-                </Link>
-            ) : (
-                // @ts-ignore
-                <button {...domProps}>
-                    <div className={(isLoading ? "invisible " : "") + (disabled ? "cursor-not-allowed " : "") + (props.childClassName || "")}>
-                        {children}
-                    </div>
-                </button>
-            )}
-            {isLoading && <div className="up-spinner"/>}
-        </div>
-    )
+    return href ? (
+        <Link href={href}>
+            {/* @ts-ignore */}
+            <a {...domProps} className={`relative inline-block ${className || ""} ${disabled ? "opacity-25 cursor-not-allowed" : ""}`}>
+                <div className={props.childClassName || ""}>{children}</div>
+            </a>
+        </Link>
+    ) : (
+        // @ts-ignore
+        <button {...domProps} className={`relative inline-block ${className || ""} ${disabled ? "opacity-25 cursor-not-allowed" : ""}`}>
+            <div className={(disabled ? "cursor-not-allowed " : "") + (props.childClassName || "")}>{children}</div>
+        </button>
+    );
 }

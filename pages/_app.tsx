@@ -2,6 +2,8 @@ import Router, { useRouter } from "next/router";
 import NProgress from "nprogress";
 import { useEffect, useState } from "react";
 import ReactModal from "react-modal";
+import Loading from "../components/Loading";
+import SEO from "../components/SEO";
 import "../styles/globals.css";
 import "../styles/nprogress.css";
 
@@ -29,11 +31,13 @@ export default function App({ Component, pageProps }) {
     }, [router]);
 
     return (
-        // <Loading loading={loading} />
-        // {/* <Navbar/> */}
-        <div id="app-root">
-            <Component {...pageProps} />
-        </div>
+        <>
+            <SEO title="Planned Obsolescence" description="The problem of electronic waste" />
+            <Loading loading={loading} />
+            <div id="app-root">
+                <Component {...pageProps} />
+            </div>
+        </>
     );
 }
 
