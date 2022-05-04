@@ -2,19 +2,24 @@ import { HomeIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
 import Button from "./headless/Button";
 
-const Part2Navbar = () => {
+const Part2Navbar = ({ screen = true }) => {
+    // screen: true if we only drop down fixed menu after scrolled a whole screen
     const [isFixed, setIsFixed] = useState(false);
     useEffect(() => {
         const fn = () => {
             const n = window.scrollY / window.innerHeight; // number of windows scrolled
-            setIsFixed(n > 1);
+            setIsFixed(screen ? n > 1 : window.scrollY > 48 * 2);
         };
         document.addEventListener("scroll", fn);
         return () => document.removeEventListener("scroll", fn);
     });
 
     return (
-        <div className={`flex z-50 w-full inset-0 h-12 items-center px-6 transition ${isFixed ? "fixed bg-white shadow-lg" : "absolute"}`}>
+        <div
+            className={`flex z-50 w-full inset-0 h-12 items-center px-6 transition ${
+                isFixed ? "fixed bg-white shadow-lg" : screen ? "absolute" : "fixed bg-white"
+            }`}
+        >
             <Button href="/">
                 <HomeIcon className="text-black hover:text-gray-700 transition" width={24} />
             </Button>

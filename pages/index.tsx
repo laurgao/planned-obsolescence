@@ -1,12 +1,11 @@
 import { HomeIcon } from "@heroicons/react/solid";
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ArticleSection2 from "../components/ArticleSection2";
 import { BlueBox } from "../components/BlueBox";
 import Filler from "../components/Filler";
 import Button from "../components/headless/Button";
 import Container from "../components/headless/Container";
-import SoundController from "../components/SoundController";
 import bgMainImgFartherBuildings from "../images/bg/bg-buildings-farther.png";
 import bgMainImgFlipppedBuildings from "../images/bg/bg-buildings-flipped.png";
 import bgLast from "../images/bg/bg-last.png";
@@ -25,24 +24,12 @@ const nBgImages = Math.ceil((nScreens * Math.log(0.5)) / Math.log(bgScaleFactor)
 export default function Home() {
     const [titleScale, setTitleScale] = useState(100);
     const [nWindowsScrolled, setNWindowsScrolled] = useState<number>(0); // because can't use `window` outside useEffect
-    const [isPlayingMusic, setIsPlayingMusic] = useState(true);
-    const audio = useRef<HTMLAudioElement | undefined>();
+    const [fullScreenImageClassNames, setFullScreenImageClassNames] = useState<string>("w-screen");
+
     useEffect(() => {
-        // audio.current = typeof Audio !== "undefined" ? new Audio("music.mp3") : undefined
-        if (typeof Audio !== "undefined" && !audio.current) {
-            audio.current = new Audio("music.mp3");
-            audio.current.volume = 0.1;
-        }
-        const fn = () => {
-            if (audio.current) {
-                audio.current.play();
-            }
-        };
-        // document.addEventListener("scroll", fn);
-        document.addEventListener("mousemove", fn);
-        return () => document.removeEventListener("mousemove", fn);
-    }, [typeof Audio]);
-    // const [isPlayingMusic, setIsPlayingMusic] = useAudio("music.mp3", true);
+        let ratio = window.innerWidth / window.innerHeight;
+        setFullScreenImageClassNames(ratio > 16 / 9 ? "w-screen" : "h-screen");
+    });
 
     useEffect(() => {
         const title = document.querySelector("#title");
@@ -90,9 +77,34 @@ export default function Home() {
         return () => document.removeEventListener("scroll", fn);
     });
 
+    const PropImage = ({
+        src,
+        nWindowsScrolled,
+        position,
+        scaleToBlurCallback,
+    }: {
+        src;
+        nWindowsScrolled: number;
+        position: number;
+        scaleToBlurCallback: (number) => number;
+    }) => {
+        // position: number of bgs down for it to be linked to.
+        const scale = Math.pow(2, nWindowsScrolled) * Math.pow(bgScaleFactor, position);
+        const blurValue = scaleToBlurCallback(scale);
+        // only render image if scale is within range
+        return scale > 0.01 && scale < 5 ? (
+            <Image
+                src={src}
+                className={fullScreenImageClassNames}
+                style={{ transform: `scale(${scale})`, transformOrigin: "52.5573% 42.8259%", filter: `blur(${blurValue}rem)` }}
+            ></Image>
+        ) : (
+            <></>
+        );
+    };
+
     return (
         <>
-            <SoundController isPlayingMusic={isPlayingMusic} setIsPlayingMusic={setIsPlayingMusic} white={true} />
             {/* navbar */}
             <div className={`flex z-50 w-full inset-0 h-16 items-center px-6 transition absolute text-white `}>
                 <Button href="/">
@@ -176,7 +188,7 @@ export default function Home() {
                                         ? bgLast
                                         : bgMainImgFartherBuildings
                                 }
-                                className="w-screen h-screen"
+                                className={fullScreenImageClassNames}
                                 id={`bg-${n}`}
                                 style={{ transformOrigin: "52.5573% 42.8259%" }}
                                 priority={i === 0 ? true : false}
@@ -189,7 +201,7 @@ export default function Home() {
             {/* <div style={{ zIndex: -1 }} className="fixed inset-0 w-screen h-screen bg-opacity-20 bg-black" /> */}
             {/* Sky is below all bg images. */}
             <div className="fixed inset-0" style={{ zIndex: -nBgImages - 4 }} id="sky">
-                <Image src={skyImg} className="w-screen h-screen" priority={true}></Image>
+                <Image src={skyImg} className={fullScreenImageClassNames} priority={true}></Image>
             </div>
             {/* Auxillary props are above all bgs but below car. */}
             <div className="fixed inset-0" style={{ zIndex: -3 }}>
@@ -324,30 +336,4 @@ const scaleToBlurTrash2 = (scale) => {
         blurValue = maxBlurFront;
     }
     return blurValue;
-};
-
-const PropImage = ({
-    src,
-    nWindowsScrolled,
-    position,
-    scaleToBlurCallback,
-}: {
-    src;
-    nWindowsScrolled: number;
-    position: number;
-    scaleToBlurCallback: (number) => number;
-}) => {
-    // position: number of bgs down for it to be linked to.
-    const scale = Math.pow(2, nWindowsScrolled) * Math.pow(bgScaleFactor, position);
-    const blurValue = scaleToBlurCallback(scale);
-    // only render image if scale is within range
-    return scale > 0.01 && scale < 5 ? (
-        <Image
-            src={src}
-            className="w-screen h-screen"
-            style={{ transform: `scale(${scale})`, transformOrigin: "52.5573% 42.8259%", filter: `blur(${blurValue}rem)` }}
-        ></Image>
-    ) : (
-        <></>
-    );
 };

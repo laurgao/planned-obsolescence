@@ -1,16 +1,52 @@
 import { VolumeOffIcon, VolumeUpIcon } from "@heroicons/react/outline";
-import React, { Dispatch, SetStateAction, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import Button from "./headless/Button";
 
-const SoundController = ({
-    isPlayingMusic,
-    setIsPlayingMusic,
-    white = false,
-}: {
-    isPlayingMusic: boolean;
-    setIsPlayingMusic: Dispatch<SetStateAction<boolean>>;
-    white?: boolean;
-}) => {
+const SoundController = ({ white = false }: { white?: boolean }) => {
+    const [hasPlayedOnce, setHasPlayedOnce] = useState(false);
+    const [isPlaying, setIsPlaying] = useState(true);
+    const audio = useRef<HTMLAudioElement | undefined>();
+    useEffect(() => {
+        if (typeof Audio !== "undefined" && !audio.current) {
+            audio.current = new Audio("music.mp3");
+            audio.current.volume = 0.1;
+        }
+        console.log(hasPlayedOnce);
+        const fn = () => {
+            if (audio.current) {
+                audio.current.play();
+                setHasPlayedOnce(true);
+            }
+        };
+        if (!hasPlayedOnce) document.body.addEventListener("mousemove", fn); // or scroll
+        return () => {
+            document.body.removeEventListener("mousemove", fn);
+        };
+    }, [typeof Audio, hasPlayedOnce]);
+
+    useEffect(() => {
+        if (audio.current) {
+            if (isPlaying) {
+                audio.current.play();
+            } else {
+                audio.current.pause();
+            }
+        }
+    }, [isPlaying]);
+
+    // automatically loop playback.
+    useEffect(() => {
+        audio.current?.addEventListener("ended", () => audio.current.play());
+        return () => {
+            audio.current?.removeEventListener("ended", () => audio.current.play());
+        };
+    }, []);
+
+    useEffect(() => {
+        // pause audio when component unmounts.
+        return () => audio.current?.pause();
+    }, []);
+
     const iconSize = 36;
     const triangleWidth = 40; // this variable does not control triangle width, is just an indicator of it.
     const [x, setX] = useState(null);
@@ -25,7 +61,7 @@ const SoundController = ({
             >
                 {/* popup description */}
                 <div className="w-48 h-10 bg-black rounded-full flex items-center justify-center leading-none text-white">
-                    Music {isPlayingMusic ? "off" : "on"}
+                    Music {isPlaying ? "off" : "on"}
                 </div>
                 <div
                     className="w-0 h-0 transition delay-150"
@@ -38,12 +74,12 @@ const SoundController = ({
                 ></div>
             </div>
             <Button
-                onClick={() => setIsPlayingMusic((prev) => !prev)}
+                onClick={() => setIsPlaying((prev) => !prev)}
                 className="opacity-60 hover:opacity-70 transition"
                 onMouseOver={(e) => setX(iconSize / 2)}
                 onMouseLeave={() => setX(false)}
             >
-                {isPlayingMusic ? <VolumeUpIcon width={iconSize} /> : <VolumeOffIcon width={iconSize} />}
+                {isPlaying ? <VolumeUpIcon width={iconSize} /> : <VolumeOffIcon width={iconSize} />}
             </Button>
         </div>
     );

@@ -1,22 +1,19 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React from "react";
 import Button from "../components/headless/Button";
 import Container from "../components/headless/Container";
 import Part2Navbar from "../components/Part2Navbar";
-import SoundController from "../components/SoundController";
 import WasteHeader from "../components/WasteHeader";
 import threeRsImg from "../images/2/reduce_reuse_recycle.png";
 import calendarImg from "../images/2/Toronto-Waste-management.jpg";
 import whatMostPeopleSeeImg from "../images/2/what_most_people_see.png";
 
 const Waste = () => {
-    const [isSoundPlaying, setIsSoundPlaying] = useState<boolean>(true);
     return (
         <div>
             <WasteHeader />
             <Part2Navbar />
-            <SoundController isPlayingMusic={isSoundPlaying} setIsPlayingMusic={setIsSoundPlaying} />
-            <Container className="overflow-x-hidden" id="container">
+            <Container className="overflow-x-hidden pb-24" id="container">
                 <div className="prose mx-auto">
                     <p>
                         When I hear about global warming, the first thing that pops into my mind is carbon dioxide emissions and energy usage—oil,
@@ -45,7 +42,7 @@ const Waste = () => {
                     </p>
                     <p>
                         <strong>
-                            I first found myself intruiged by this problem because it is so unsatisfying - so much of the e-waste we produce is not
+                            I first found myself intruiged by this problem because it is so unsatisfying—so much of the e-waste we produce is not
                             necessary! Do Americans need a new phone every 2 years? No way! Last time you bought a new phone, your old one was
                             probably in working condition.
                         </strong>
@@ -53,7 +50,7 @@ const Waste = () => {
                     <p>
                         This led me to do a deep dive into the root causes behind the{" "}
                         <a href="https://www.usatoday.com/story/news/nation/2014/11/10/smart-phone-security-risks/18798709/">416,000 cell phones</a>{" "}
-                        reaching a landfill each day. The answers I found shocked me. This is what I'll be talking about here.
+                        reaching landfills each day. The answers I found shocked me. This is what I'll be talking about here.
                     </p>
 
                     <h2>Recycling is not the solution</h2>
@@ -94,7 +91,7 @@ const Waste = () => {
                         leaking out of landfills and poisoning our water. No need for &quot;banning plastic&quot;—as we have seen from the War on
                         Drugs, cutting supply does not solve the problem when there is a high demand. Banning single use plastic will not solve the
                         problem. Instead, change needs to emerge from the bottom up, to eradicate demand for single use plastic.{" "}
-                        <strong>That can only be created via a culture of reducing waste</strong> (more about this in Part 4).
+                        <strong>That can only be created via a culture of reducing waste</strong> (more about this in Part 3).
                     </p>
                     <p>
                         Reducing waste also has the added benefit of not needing the energy and resources to produce the wasted item in the first
@@ -128,14 +125,14 @@ const Waste = () => {
                     <p>
                         If reducing is not possible, reusing is also a good option. Your child may not want your old electonics (so you buy them new
                         ones), but other people may. Try donating your old phone to a local secondhand shop or to friends and family instead of
-                        throwing it away when your it goes out of fashion.
+                        throwing it away when it goes out of fashion 3 years after buying it.
                     </p>
                     <h3>3. Recycle</h3>
                     <p>
-                        If you're too embarassed to be seen with an old iPhone model, even while donating it, then you can resort to the third R.
-                        Recycling your e-waste still makes you more environmentally-conscious than 85% of individuals. Do some background checking
-                        to make sure that your e-waste recycler is a trustworthy place—if not, they might just ship your waste overseas to be dealt
-                        with in a place like Guiyu, where the workers who will be inhaling the toxic fumes from your laptop are{" "}
+                        If you're too embarassed to be seen with an old iPhone model, even at the donation center, then you can resort to the third
+                        R. Recycling your e-waste still makes you more environmentally-conscious than more than 80% of individuals. Do some
+                        background checking to make sure that your e-waste recycler is a trustworthy place—if not, they might just ship your waste
+                        overseas to be dealt with in a place like Guiyu, where the workers who will be inhaling the toxic fumes from your laptop are{" "}
                         <a href="https://www.theworldcounts.com/stories/electronic-waste-facts">payed $1.50 per day</a>.
                     </p>
                     <hr />
