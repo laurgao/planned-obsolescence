@@ -90,6 +90,7 @@ const WasteHeader = () => {
     }
 
     return (
+        // overflow-x-hidden to prevent horizontal scrollbar in case the p5 sketch is a little wider than screen width
         <header className="w-full h-screen overflow-x-hidden">
             <p className="absolute w-full text-center uppercase font-bold text-gray-500 text-lg" style={{ top: "15vh" }}>
                 Part 2

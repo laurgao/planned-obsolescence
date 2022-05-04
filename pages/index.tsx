@@ -1,3 +1,7 @@
+// Laura Gao (342611589)
+// April 18, 2022
+// This file is the homepage of a website about the problem of electronic waste.
+
 import { HomeIcon } from "@heroicons/react/solid";
 import Image from "next/image";
 import { useEffect, useState } from "react";
@@ -18,7 +22,7 @@ import trashPileImg from "../images/bg/trash.png";
 import { paragraphScale, scaleToOpacity } from "../utils/scroll";
 
 const bgScaleFactor = 0.10625; // each subsequent bg image is scaled down by this factor.
-const nScreens = 50; // the height of this page is equal to the height of how many viewport heights.
+const nScreens = 44.49044989224138; // the height of this page is equal to the height of how many viewport heights.
 const nBgImages = Math.ceil((nScreens * Math.log(0.5)) / Math.log(bgScaleFactor));
 
 export default function Home() {
@@ -42,7 +46,6 @@ export default function Home() {
 
     useEffect(() => {
         const title = document.querySelector("#title");
-        // console.log(img.offsetTop, img.offsetHeight);
 
         const article = document.querySelector("#article");
         const fn = () => {
@@ -55,13 +58,13 @@ export default function Home() {
             if (article) {
                 for (let i = 0; i < article.childNodes.length; i++) {
                     const element = article.childNodes[i];
-                    const scalio = paragraphScale(i, n, -1);
-                    const opacity = scaleToOpacity(scalio);
-                    // if (i == 1) console.log(nn - (i + c));
-                    element.style.transform = `scale(${scalio})`;
-                    // element.style.zIndex = bigNumber - i; // so uh latter elements come on top of former ones.
+                    const scale = paragraphScale(i, n, -1);
+                    const opacity = scaleToOpacity(scale);
+                    // @ts-ignore property style exists on element
+                    element.style.transform = `scale(${scale})`;
+                    // @ts-ignore property style exists on element
                     element.style.opacity = opacity;
-                    // element.style.filter = `blur(${1 - opacity}em)`;
+                    // element.style.filter = `blur(${1 - opacity}em)`; it looks better without blur (so doesn't look low res)
                 }
             }
         };
@@ -104,7 +107,7 @@ export default function Home() {
         blurValue?: number;
         transformOrigin?: string;
     }) => {
-        // this prob exists because I want a central source of truth for the transform and width/height
+        // this component exists because I want a central source of truth for the transform and width/height
         let style = { transformOrigin: transformOrigin || "52.5573% 42.8259%", transform: `scale(${scale})` };
         if (blurValue) style["filter"] = `blur(${blurValue}rem)`;
         return (
@@ -117,11 +120,14 @@ export default function Home() {
     return (
         <>
             {/* navbar */}
-            <div className={`flex z-50 w-full inset-0 h-16 items-center px-6 transition absolute text-white `}>
+            {/* Home button is fixed so you can click it every time you want to go to the navbar. */}
+            <div className="z-50 fixed px-6 text-white transition flex h-16 items-center">
                 <Button href="/">
                     <HomeIcon className="hover:opacity-80 opacity-50 transition" width={36} />
                 </Button>
-                <div className="ml-auto flex gap-4 h-full items-center font-medium opacity-50">
+            </div>
+            <div className={`flex w-full inset-0 px-6 transition text-white justify-end`}>
+                <div className="absolute h-16 z-50 flex gap-4 items-center font-medium opacity-50">
                     <div className="h-full">
                         <Button
                             href="/part-2"

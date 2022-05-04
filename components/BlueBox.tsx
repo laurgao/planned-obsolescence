@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { paragraphScale } from "../utils/scroll";
 
 export const BlueBox = ({ nWindowsScrolled }) => {
-    // const [nParagraphsBeforeThis, setNParagraphsBeforeThis] = useState(0);
     const [heightOfBlueBox, setHeightOfBlueBox] = useState(0);
     const [opacity, setOpacity] = useState(0);
     const [bgOpacity, setBgOpacity] = useState(0);
@@ -14,10 +13,8 @@ export const BlueBox = ({ nWindowsScrolled }) => {
     useEffect(() => {
         const article = document.querySelector("#article");
         const nParagraphsBeforeThis = article.childNodes.length;
-        // setNParagraphsBeforeThis(article.childNodes.length);
 
-        const blueBox = document.querySelector("#blue-box");
-        // if (blueBox) setHeightOfBlueBox(blueBox.offsetHeight);
+        const blueBox = document.getElementById("blue-box");
         let h;
         if (blueBox) {
             h = blueBox.offsetHeight;
@@ -118,10 +115,10 @@ export const BlueBox = ({ nWindowsScrolled }) => {
             </p>
             <p>
                 Price collusion is when a few companies that control the whole market combined get together, and form an agreement to raise prices.
-                e.g. if all bread manufacturers (dumpsters, ...) decided to simultaneously double the price of bread today. You don&#x27;t like the
-                higher bread prices? Well too bad for you, every loaf of bread you find at your local Food Basics will be made by one of these
-                companies taking part in doubling their bread price. Too bad for you, you have to pay 2x the cost for the same item, because a few
-                big corporations wanted the extra profit. You think you meager consumer can win against a company with millions of dollars?
+                e.g. if all bread manufacturers decided to simultaneously double the price of bread today. You don&#x27;t like the higher bread
+                prices? Well too bad for you, every loaf of bread you find at your local Food Basics will be made by one of these companies taking
+                part in doubling their bread price. Too bad for you, you have to pay 2x the cost for the same item, because a few big corporations
+                wanted the extra profit. You think you meager consumer can win against a company with millions of dollars?
             </p>
             <p>
                 However, there is a crucial difference between price collusion and planned obsolescence: price collusion is <em>illegal</em>. It was

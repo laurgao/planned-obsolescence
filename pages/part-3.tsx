@@ -1,3 +1,5 @@
+// This page talks about the problem of e-waste at a systematic societal level, and what we can do collectively to solve this problem.
+
 import Image from "next/image";
 import React from "react";
 import HandDrawnButton from "../components/HandDrawnButton";
@@ -120,8 +122,12 @@ const solutions = () => {
                 <div className="prose mx-auto">
                     <h2>Footnotes</h2>
                     <p>
-                        [1] An <a>average EV of the era</a> had a range of 30-50 miles, while the median gas car as a range of slightly above 400
-                        miles.
+                        [1] An <a href="https://www.hotcars.com/pre-2000s-evs/">average EV of the era</a> had a range of 30-50 miles, while the
+                        median gas car as a range of{" "}
+                        <a href="https://www.energy.gov/eere/vehicles/fact-939-august-22-2016-all-electric-vehicle-ranges-can-exceed-those-some-gasoline">
+                            slightly above 400 miles
+                        </a>
+                        .
                     </p>
                 </div>
             </Container>

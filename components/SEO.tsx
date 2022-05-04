@@ -22,8 +22,8 @@ export default function SEO({
     let openGraph = {
         title: fullTitle,
         description: description,
-        url: "https://your-domain.com" + router.asPath,
-        images: imgUrl ? [{ url: imgUrl }] : [{ url: "https://your-domain.com/defaultImage.png" }],
+        url: "https://planned-obsolescence.vercel.app/" + router.asPath,
+        images: imgUrl ? [{ url: imgUrl }] : [{ url: "https://planned-obsolescence.vercel.app/defaultImage.png" }],
     };
 
     let twitter = {

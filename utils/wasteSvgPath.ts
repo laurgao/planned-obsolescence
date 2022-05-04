@@ -1,3 +1,5 @@
+// Contains x and y coordinates sampled from the path of an svg that is the outline of the word "WASTE".
+
 const drawing = [
     { x: 6895.37, y: 6901.68 },
     { x: 6894.308721452283, y: 6901.878879362363 },

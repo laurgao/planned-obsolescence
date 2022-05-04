@@ -1,30 +1,17 @@
-# Next MongoDB Nextauth Example
+# Planned obsolescence
 
-Builds on [next-tailwind-typescript-example](https://github.com/wwsalmon/next-tailwind-typescript-example). A minimal but opinionated personal biolerplate
+This website is built with Next.js (a React.js framework), typescript, tailwindcss, and p5.js.
 
-general stuff:
-- Typescript and TailwindCSS
-- `_document.tsx`
-- nprogress
-- toasts
-- SEO component
-- Button and modal components
-- Mongoose/MongoDB
-- SWR with `fetcher.ts`
-  
-mongodb/api stuff:
-- `nextApiEndpoint.ts`
-- next-response-helpers
-- `dbConnect.ts`
-- `getThisUser.ts`
-- `UserModel`
-- [NextAuth](https://next-auth.js.org/) with UserModel integration
-- Basic auth flow screens
+`npm i` to install packages and then `npm run dev` to view the website locally on `http://localhost:3000`.
 
-To use, run `npx create-next-app -e https://github.com/wwsalmon/next-mongodb-nextauth-example`, then create a `.env`
-file with the following variables:
-- MONGODB_URL
-- GOOGLE_CLIENT_ID
-- GOOGLE_CLIENT_SECRET
-- NEXTAUTH_URL
-- NEXTAUTH_SECRET
+Alternatively, if you don't have node.js or npm installed, view the website at my deployment at [https://planned-obsolescence.vercel.app/](https://planned-obsolescence.vercel.app/).
+
+## Table of Contents
+
+-   CSS: `styles/globals.css`
+-   Homepage: `pages/index.tsx`
+-   Page 2: `pages/page-2.tsx`
+-   Page 3: `pages/page-3.tsx`
+-   Works Cited: `pages/credits.tsx`
+-   All image files in `images` folder
+-   Music file in `public` folder

@@ -1,3 +1,5 @@
+// This page provides more detail into the problem of e-waste and proposes some solutions that individuals can take to combat the problem.
+
 import Image from "next/image";
 import React from "react";
 import HandDrawnButton from "../components/HandDrawnButton";
