@@ -1,43 +1,31 @@
 import {GetServerSideProps} from "next";
-import {getSession, signOut, useSession} from "next-auth/client";
-import {useEffect} from "react";
-import Link from "next/link";
-import SEO from "../../components/SEO";
+import getThisUser from "../../utils/getThisUser";
+import {ssrRedirect} from "next-response-helpers";
 import SignInButton from "../../components/SignInButton";
-import {UserModel} from "../../models/User";
-import dbConnect from "../../utils/dbConnect";
+import {getSession} from "next-auth/react";
 
-export default function SignIn({notAllowed}: { notAllowed: boolean }) {
-    const [session, loading] = useSession();
-
-    useEffect(() => {
-        if (session && notAllowed) signOut();
-    }, [loading]);
-
+export default function SignIn({}: {}) {
     return (
         <>
-            <SEO title="Sign in"/>
-            <h1>Sign in</h1>
-            {notAllowed && (
-                <span>No account found for the given email. <Link href="/"><a>Sign up for the waitlist</a></Link> to get early access</span>
-            )}
-            <p>If you already have a YourApp account, click below to sign in.</p>
             <SignInButton/>
         </>
     );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-    const session = await getSession(context);
-
-    if (!session) return {props: {}};
-
     try {
-        await dbConnect();
-        const thisUser = await UserModel.findOne({email: session.user.email});
-        return thisUser ? {redirect: {permanent: false, destination: "/app"}} : {props: {notAllowed: true}};
-    } catch (e) {
+        const session = await getSession(context);
+
+        if (!session) return {props: {}};
+
+        const thisUser = await getThisUser(context);
+
+        if (!thisUser) return ssrRedirect("/auth/newaccount");
+
+        return ssrRedirect("/app");
+    }
+    catch (e) {
         console.log(e);
-        return {notFound: true};
+        return ssrRedirect("/");
     }
 };

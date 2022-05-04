@@ -14,14 +14,7 @@ async function dbConnect() {
         return;
     }
 
-    return mongoose.connect(MONGODB_URL, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-        useFindAndModify: false,
-        useCreateIndex: true,
-        maxIdleTimeMS: 10000,
-        socketTimeoutMS: 20000,
-    });
+    return mongoose.connect(MONGODB_URL);
 }
 
 export default dbConnect;

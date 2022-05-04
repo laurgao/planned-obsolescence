@@ -10,12 +10,12 @@ export default function Button(props: ButtonProps) {
     delete domProps.childClassName;
 
     return (
-        <div className={`relative inline-block ${containerClassName || ""} ${disabled ? "opacity-25 cursor-not-allowed" : ""} ${props.childClassName || ""}`}>
+        <div className={`relative inline-block ${containerClassName || ""} ${disabled ? "opacity-25 cursor-not-allowed" : ""}`}>
             {href ? (
                 <Link href={href}>
                     {/* @ts-ignore */}
                     <a {...domProps}>
-                        <div className={isLoading ? "invisible" : ""}>
+                        <div className={(isLoading ? "invisible " : "") + (props.childClassName || "")}>
                             {children}
                         </div>
                     </a>

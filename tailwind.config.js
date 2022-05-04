@@ -1,7 +1,7 @@
 module.exports = {
-    purge: [
-        './**/*.html',
-        './**/*.tsx',
+    content: [
+        "./**/*.html",
+        "./**/*.tsx",
     ],
     theme: {
         container: {
@@ -11,4 +11,4 @@ module.exports = {
     },
     variants: {},
     plugins: [],
-}
+};

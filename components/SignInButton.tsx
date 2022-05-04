@@ -1,6 +1,6 @@
 import Button from "./headless/Button";
 import {FaGoogle} from "react-icons/fa";
-import {signIn} from "next-auth/client";
+import {signIn} from "next-auth/react";
 
 export default function SignInButton() {
     return (

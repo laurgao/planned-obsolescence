@@ -1,10 +1,10 @@
-import {useSession} from "next-auth/client";
-import Button from "./Button";
+import {useSession} from "next-auth/react";
+import Button from "./headless/Button";
 import Container from "./headless/Container";
 import {useRouter} from "next/router";
 
 export default function Navbar() {
-    const [session, loading] = useSession();
+    const {data: session} = useSession();
     const router = useRouter();
 
     return (
