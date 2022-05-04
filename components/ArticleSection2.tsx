@@ -26,7 +26,7 @@ const scaleToBlurSign = (scale) => {
     return blurValue;
 };
 
-const ArticleSection2 = ({ nWindowsScrolled }: { nWindowsScrolled: number }) => {
+const ArticleSection2 = ({ nWindowsScrolled, BgImage }: { nWindowsScrolled: number; BgImage }) => {
     const content: ((scale: number) => [ReactNode, boolean | number])[] = [
         (scale: number) => [
             <p style={{ transform: `scale(${scale})`, opacity: scaleToOpacity(scale) }}>
@@ -56,16 +56,7 @@ const ArticleSection2 = ({ nWindowsScrolled }: { nWindowsScrolled: number }) => 
             return [
                 <>
                     <div className="precedes-unruly-image"></div>
-                    <Image
-                        src={joshua0}
-                        className="w-screen h-screen inset-0 transition-none"
-                        style={{
-                            filter: `blur(${scaleToBlurSign(imgScale)}rem)`,
-                            transform: `scale(${imgScale})`,
-                            transformOrigin: "52.5573% 42.8259%",
-                            maxWidth: "none",
-                        }}
-                    />
+                    <BgImage src={joshua0} scale={imgScale} blurValue={scaleToBlurSign(imgScale)} zIndex="-2" />
                     <p style={{ transform: `scale(${scale})`, opacity: scaleToOpacity(scale) }}>
                         Year: 2005. Joshua buys a new Acer laptop, it weights around 10 pounds.
                     </p>
@@ -85,17 +76,7 @@ const ArticleSection2 = ({ nWindowsScrolled }: { nWindowsScrolled: number }) => 
                         Year: 2010. After using the laptop for 5 years, the battery breaks. (The battery is usually the first part of a consumer
                         electronic to break.)
                     </p>
-                    <Image
-                        src={joshua1}
-                        className="w-screen h-screen transition-none"
-                        priority={true}
-                        style={{
-                            filter: `blur(${scaleToBlurSign(imgScale)}rem)`,
-                            transform: `scale(${imgScale})`,
-                            transformOrigin: "52.5573% 42.8259%",
-                            maxWidth: "none",
-                        }}
-                    />
+                    <BgImage src={joshua1} priority={true} scale={imgScale} blurValue={scaleToBlurSign(imgScale)} zIndex="-2" />
                 </>,
                 3000,
             ];
@@ -117,16 +98,13 @@ const ArticleSection2 = ({ nWindowsScrolled }: { nWindowsScrolled: number }) => 
             return [
                 <>
                     <div className="precedes-unruly-image"></div>
-                    <Image
+                    <BgImage
+                        transformOrigin={transformOrigin}
                         src={joshua2}
-                        className="w-screen h-screen transition-none"
-                        style={{
-                            filter: `blur(${scaleToBlurSign(imgScale)}rem)`,
-                            transform: `scale(${imgScale})`,
-                            transformOrigin: transformOrigin,
-                            maxWidth: "none",
-                        }}
                         priority={true} // so it doesn't render on top of the text when lazy loading.
+                        scale={imgScale}
+                        blurValue={scaleToBlurSign(imgScale)}
+                        zIndex="-2"
                     />
                 </>,
                 500,
@@ -139,16 +117,7 @@ const ArticleSection2 = ({ nWindowsScrolled }: { nWindowsScrolled: number }) => 
             return [
                 <>
                     <div className="precedes-unruly-image"></div>
-                    <Image
-                        src={joshua3}
-                        className="w-screen h-screen transition-none"
-                        style={{
-                            filter: `blur(${scaleToBlurSign(imgScale)}rem)`,
-                            transform: `scale(${imgScale})`,
-                            transformOrigin: "52.5573% 42.8259%",
-                            maxWidth: "none",
-                        }}
-                    />
+                    <BgImage src={joshua3} scale={imgScale} blurValue={scaleToBlurSign(imgScale)} zIndex="-2" />
                     <p style={{ transform: `scale(${scale})`, opacity: scaleToOpacity(scale) }}>
                         Year: 2015. The battery breaks for the second time, and Joshua replaces it again.
                     </p>

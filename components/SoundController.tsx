@@ -11,7 +11,6 @@ const SoundController = ({ white = false }: { white?: boolean }) => {
             audio.current = new Audio("music.mp3");
             audio.current.volume = 0.1;
         }
-        console.log(hasPlayedOnce);
         const fn = () => {
             if (audio.current) {
                 audio.current.play();

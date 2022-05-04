@@ -84,10 +84,8 @@
     color: inherit !important;
 }
 
-.precedes-unruly-image+span {
-    position: fixed !important;
-    top: 0;
-    z-index: -2;
+.precedes-unruly-image+div {
+    max-width: none !important;
 }
 
 .nav-item:hover+.nav-dropdown, .nav-dropdown:hover {

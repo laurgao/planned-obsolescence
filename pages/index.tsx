@@ -24,11 +24,20 @@ const nBgImages = Math.ceil((nScreens * Math.log(0.5)) / Math.log(bgScaleFactor)
 export default function Home() {
     const [titleScale, setTitleScale] = useState(100);
     const [nWindowsScrolled, setNWindowsScrolled] = useState<number>(0); // because can't use `window` outside useEffect
-    const [fullScreenImageClassNames, setFullScreenImageClassNames] = useState<string>("w-screen");
+
+    const [width, setWidth] = useState(null);
+    const [height, setHeight] = useState(null);
 
     useEffect(() => {
         let ratio = window.innerWidth / window.innerHeight;
-        setFullScreenImageClassNames(ratio > 16 / 9 ? "w-screen" : "h-screen");
+        if (ratio > 16 / 9) {
+            // width is greater than height
+            setWidth(window.innerWidth);
+            setHeight((window.innerWidth * 9) / 16);
+        } else {
+            setHeight(window.innerHeight);
+            setWidth((window.innerHeight * 16) / 9);
+        }
     });
 
     useEffect(() => {
@@ -40,14 +49,8 @@ export default function Home() {
             const n = window.scrollY / window.innerHeight; // number of windows scrolled
             setNWindowsScrolled(n);
             if (title) {
-                // img.offsetTop, img.offsetHeight, img.scrollTop, window.pageYOffset,
-                // img.getBoundingClientRect().top > window.innerHeight -> we have not yet scrolled to the image.
-                // const h = title.getBoundingClientRect().top + title.getBoundingClientRect().height / 2;
                 const newScale = n < 1.33 ? Math.pow(2, n) * 100 : Math.pow(20, n - 1) * 100;
                 setTitleScale(newScale);
-                // title.style.zIndex = bigNumber + 1; // does nothing for some reason
-                // let blurr = n / 100;
-                // title.style.filter = `blur(${blurr}rem)`;
             }
             if (article) {
                 for (let i = 0; i < article.childNodes.length; i++) {
@@ -59,16 +62,6 @@ export default function Home() {
                     // element.style.zIndex = bigNumber - i; // so uh latter elements come on top of former ones.
                     element.style.opacity = opacity;
                     // element.style.filter = `blur(${1 - opacity}em)`;
-                }
-
-                let bgImgScales = [];
-                for (let i = 1; i <= nBgImages; i++) {
-                    const scale = i === 1 ? Math.pow(2, n) : bgImgScales[bgImgScales.length - 1] * bgScaleFactor;
-                    bgImgScales.push(scale);
-                    const currBgImage = document.getElementById(`bg-${i}`);
-                    if (currBgImage) {
-                        currBgImage.style.transform = `scale(${scale})`;
-                    }
                 }
             }
         };
@@ -92,14 +85,32 @@ export default function Home() {
         const scale = Math.pow(2, nWindowsScrolled) * Math.pow(bgScaleFactor, position);
         const blurValue = scaleToBlurCallback(scale);
         // only render image if scale is within range
-        return scale > 0.01 && scale < 5 ? (
-            <Image
-                src={src}
-                className={fullScreenImageClassNames}
-                style={{ transform: `scale(${scale})`, transformOrigin: "52.5573% 42.8259%", filter: `blur(${blurValue}rem)` }}
-            ></Image>
-        ) : (
-            <></>
+        return scale > 0.01 && scale < 5 ? <BgImage src={src} scale={scale} blurValue={blurValue} zIndex={-3} /> : <></>;
+    };
+
+    const BgImage = ({
+        src,
+        zIndex,
+        priority,
+        scale = 1,
+        blurValue = 0,
+        transformOrigin,
+    }: {
+        src: any;
+        zIndex: number;
+        imgId?: string;
+        priority?: boolean;
+        scale?: number;
+        blurValue?: number;
+        transformOrigin?: string;
+    }) => {
+        // this prob exists because I want a central source of truth for the transform and width/height
+        let style = { transformOrigin: transformOrigin || "52.5573% 42.8259%", transform: `scale(${scale})` };
+        if (blurValue) style["filter"] = `blur(${blurValue}rem)`;
+        return (
+            <div className="fixed" style={{ zIndex: zIndex, top: "50%", left: "50%", transform: "translate(-50%, -50%)" }}>
+                <Image src={src} width={width} height={height} layout="fixed" style={style} priority={priority}></Image>
+            </div>
         );
     };
 
@@ -177,42 +188,29 @@ export default function Home() {
                     return doesNextImageFullyCoverScreen || currImgScale < 0.01 ? (
                         <></>
                     ) : (
-                        <div className="fixed inset-0" style={{ zIndex: -nBgImages + i - 3 }} key={i}>
-                            <Image
-                                src={
-                                    i < threshold
-                                        ? bgMainImg
-                                        : i === threshold
-                                        ? bgMainImgFlipppedBuildings
-                                        : i === nBgImages - 1
-                                        ? bgLast
-                                        : bgMainImgFartherBuildings
-                                }
-                                className={fullScreenImageClassNames}
-                                id={`bg-${n}`}
-                                style={{ transformOrigin: "52.5573% 42.8259%" }}
-                                priority={i === 0 ? true : false}
-                                // 42.9259 was too high
-                            ></Image>
-                        </div>
+                        <BgImage
+                            key={i}
+                            zIndex={-nBgImages + i - 3}
+                            src={
+                                i < threshold
+                                    ? bgMainImg
+                                    : i === threshold
+                                    ? bgMainImgFlipppedBuildings
+                                    : i === nBgImages - 1
+                                    ? bgLast
+                                    : bgMainImgFartherBuildings
+                            }
+                            priority={i === 0 ? true : false}
+                            scale={currImgScale}
+                        />
                     );
                 })}
-            {/* translucent black overlay */}
-            {/* <div style={{ zIndex: -1 }} className="fixed inset-0 w-screen h-screen bg-opacity-20 bg-black" /> */}
             {/* Sky is below all bg images. */}
-            <div className="fixed inset-0" style={{ zIndex: -nBgImages - 4 }} id="sky">
-                <Image src={skyImg} className={fullScreenImageClassNames} priority={true}></Image>
-            </div>
+            <BgImage src={skyImg} priority={true} zIndex={-nBgImages - 4} />
             {/* Auxillary props are above all bgs but below car. */}
-            <div className="fixed inset-0" style={{ zIndex: -3 }}>
-                <PropImage nWindowsScrolled={nWindowsScrolled} src={signImg} position={1.2} scaleToBlurCallback={scaleToBlurSign} />
-            </div>
-            <div className="fixed inset-0" style={{ zIndex: -3 }}>
-                <PropImage src={trashPileImg} nWindowsScrolled={nWindowsScrolled} position={1.5} scaleToBlurCallback={scaleToBlurTrash}></PropImage>
-            </div>
-            <div className="fixed inset-0" style={{ zIndex: -3 }}>
-                <PropImage src={trashPile2Img} nWindowsScrolled={nWindowsScrolled} position={4} scaleToBlurCallback={scaleToBlurTrash2}></PropImage>
-            </div>
+            <PropImage nWindowsScrolled={nWindowsScrolled} src={signImg} position={1.2} scaleToBlurCallback={scaleToBlurSign} />
+            <PropImage src={trashPileImg} nWindowsScrolled={nWindowsScrolled} position={1.5} scaleToBlurCallback={scaleToBlurTrash}></PropImage>
+            <PropImage src={trashPile2Img} nWindowsScrolled={nWindowsScrolled} position={4} scaleToBlurCallback={scaleToBlurTrash2}></PropImage>
 
             <div className="fixed bottom-10" style={{ left: `calc(50% - 100px)`, zIndex: -2 }}>
                 {/* width of car is 200px. subtract half of that from 50% of screen width so car is at center. */}
@@ -222,7 +220,7 @@ export default function Home() {
                 <article className="prose prose-invert" style={{ maxWidth: null }}>
                     <div className="page-body w-screen h-screen flex items-center justify-center fixed inset-0" id="article">
                         <div className="text-center">
-                            <p id="b1bc654e-7b39-4a89-af22-d2dd7271fd48" className="">
+                            <p>
                                 <a href="https://unu.edu/media-relations/releases/global-e-waste-surging-up-21-in-5-years.html#info">
                                     According to
                                 </a>{" "}
@@ -235,19 +233,14 @@ export default function Home() {
                                 This is bad news for fish that live in rivers, plants that can&#x27;t grow healthily with lead in its soil, or
                                 anyone who likes to breathe non-toxic air, as e-waste accounts for{" "}
                                 <a href="https://www.theworldcounts.com/stories/electronic-waste-facts">70%</a> of the world&#x27;s toxic waste.
-                                {/* <Link href="/app">
-                                    <a className="underline text-blue-400">Link</a>
-                                </Link> */}
                             </p>
                         </div>
-                        <p id="7ac8c033-1f2b-44b0-a7df-a16c46f8269d" className="text-center text-2xl">
+                        <p className="text-center text-2xl">
                             {/* text center bc it's one line */}
                             How is this happening?
                         </p>
-                        <p id="52bab417-0cca-4f26-80a8-078d66607657" className="text-center text-2xl">
-                            Let&#x27;s zoom out.
-                        </p>
-                        <p className="">
+                        <p className="text-center text-2xl">Let&#x27;s zoom out.</p>
+                        <p>
                             In 1925, there were about 8 light bulb manufacturers who together controlled all the light bulbs flowing out of stores.
                             These eight companies came together for a meeting, and asked, how can we can double the amount of light bulbs that
                             consumers have to purchase? That will double the revenue that we bring in. The 8 companies collaborated to launch their
@@ -255,32 +248,32 @@ export default function Home() {
                             later, <a href="https://alabrava.net/phoebus-cartel-planned-obsolescence/page/2/?et_blog">sales soared to</a>{" "}
                             <b className="text-2xl">420.8 million</b>.
                         </p>
-                        <p id="1598afb5-bfc9-49ca-ad00-60b57d879f45" className="">
+                        <p>
                             Now, what was their brilliant plan? Was it a better quality light bulb that made consumers want to buy 2x more? Was it a
                             genius marketing strategy? Was it doubling the need for light bulbs?
                         </p>
-                        <p id="62761a2d-c0bb-459a-8d59-7380c20716a8" className="">
+                        <p>
                             No. It was not any of those honest tactics that you&#x27;d expect to see in the thriving free market of western
                             capitalism. It was <em>planned obsolescence.</em>
                         </p>
-                        <p id="0d9cea1a-1831-44bf-b304-dafc961277c0" className="">
+                        <p>
                             <strong>What is planned obsolescence?</strong>
                         </p>
-                        <p id="97a2a680-41c4-44b9-b51a-8454d27d7f02" className="">
+                        <p>
                             Planned obsolescence, in a nutshell, is when <strong>products are intentionally built to be worse quality.</strong> At
                             that time, a standard quality light bulb had a lifespan of about 2500 hours. Manufacturers decided to all agree to
                             manufacture bulbs that are built to last 1000 hours—less than half the standard lifespan. Now, consumers ran out of
                             light bulbs more than 2x faster, giving them the need to visit the light bulb store 2x more often and buy 2x as much
                             bulbs, meaning 2x as much revenue on average for each of the companies involved in this contract.
                         </p>
-                        <p id="b0deaf12-94c4-47a6-af65-9e860e1da79a" className="">
+                        <p>
                             Most consumers wouldn&#x27;t find out about this. The ones that did were left powerless - because every single light
                             bulb in stores was produced by one of these eight manufacturers, consumers who didn&#x27;t like the 1000 hour light
                             bulbs could not get better quality light bulbs anywhere else.
                         </p>
                     </div>
                     <BlueBox nWindowsScrolled={nWindowsScrolled} />
-                    <ArticleSection2 nWindowsScrolled={nWindowsScrolled} />
+                    <ArticleSection2 nWindowsScrolled={nWindowsScrolled} BgImage={BgImage} />
                 </article>
                 <Filler nScreens={nScreens} />
             </Container>
