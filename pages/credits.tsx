@@ -1,36 +1,54 @@
 import React from "react";
+import HandDrawnButton from "../components/HandDrawnButton";
 import Button from "../components/headless/Button";
 import Container from "../components/headless/Container";
 import H1 from "../components/headless/H1";
 import H2 from "../components/headless/H2";
-import Part2Navbar from "../components/Part2Navbar";
+import Navbar from "../components/Navbar";
 
 const Credits = () => {
     return (
         <>
-            <Part2Navbar />
-            <Container width="2xl" className="text-center credits py-24">
+            <Navbar screen={false} />
+            <Container width="2xl" className="text-center py-24">
                 <H1 className="mb-6">Acknowledgements</H1>
                 <p className="my-2">This website would not have been possible if not for the following people:</p>
                 <p className="my-2">
-                    Thank you to <a href="https://samsonzhang.com/">Samson Zhang</a> for always encouraging me to pursue my webdev projects.
+                    Thank you to{" "}
+                    <a className="underline" href="https://samsonzhang.com/">
+                        Samson Zhang
+                    </a>{" "}
+                    for always encouraging me to pursue my webdev projects.
                 </p>
                 <p className="my-2">
                     Thank you to Emma and Colleen for beta testing. This website would not be the same without your valuable feedback.
                 </p>
                 <p className="my-2">
                     The header on <Button href="/part-2">Part 2</Button> was inspired by{" "}
-                    <a href="https://www.youtube.com/watch?v=r6sGWTCMz2k">a video by 3blue1brown</a> about the Fourier series.
+                    <a className="underline" href="https://www.youtube.com/watch?v=r6sGWTCMz2k">
+                        a video by 3Blue1Brown
+                    </a>{" "}
+                    about the Fourier series.
                 </p>
                 <p className="my-2">
                     Thank you to Ray and Carrie for hyping me up, providing emotional support which kept me motivated to make this website better.
                 </p>
                 <p className="my-2">
                     Thank you to all the webdev projects I've seen in the past that expanded my worldview on what is possible to do with webdev,
-                    breathing inspiration to try to execute my crazy ideas. These include but are not limited to: Nicky Case's project{" "}
-                    <a href="https://ncase.me/trust">Trust</a>, Madhav Malhotra's{" "}
-                    <a href="https://www.madhavmalhotra.com/blog/2021-Annual-Reflection/poetic.html">2021 reflection</a>, and Jez Swanson's awesome{" "}
-                    <a href="https://www.jezzamon.com/fourier/">visual explainer</a> of Fourier transforms.
+                    breathing inspiration to execute ideas I'd otherwise dismiss as crazy. These include but are not limited to: Nicky Case's
+                    project{" "}
+                    <a className="underline" href="https://ncase.me/trust">
+                        Trust
+                    </a>
+                    , Madhav Malhotra's{" "}
+                    <a className="underline" href="https://www.madhavmalhotra.com/blog/2021-Annual-Reflection/poetic.html">
+                        2021 reflection
+                    </a>
+                    , and Jez Swanson's awesome{" "}
+                    <a className="underline" href="https://www.jezzamon.com/fourier/">
+                        visual explainer
+                    </a>{" "}
+                    of Fourier transforms.
                 </p>
                 <H2 className="mt-12">Works Cited</H2>
                 <p className="italic text-sm mb-6 text-gray-700">A complete list of sources used in research</p>
@@ -69,19 +87,31 @@ const Credits = () => {
                 <p className="my-2">Some images I used were taken from other places:</p>
                 <p>
                     Pentalobe screws:{" "}
-                    <a href="https://en.wikipedia.org/wiki/Pentalobe_screw#/media/File:IPhone_6s_-_Lightning_connector_with_pentalobe_screws-92677.jpg">
+                    <a
+                        className="underline"
+                        href="https://en.wikipedia.org/wiki/Pentalobe_screw#/media/File:IPhone_6s_-_Lightning_connector_with_pentalobe_screws-92677.jpg"
+                    >
                         Wikipedia page on Pentalobe screws
                     </a>
                 </p>
                 <p className="my-2">
-                    Sexy cars: <a href="https://www.pinterest.com/pin/506092076878840766/">Lisset on Pintrest</a>
+                    Sexy cars:{" "}
+                    <a className="underline" href="https://www.pinterest.com/pin/506092076878840766/">
+                        Lisset on Pintrest
+                    </a>
                 </p>
                 <p className="my-2">
                     Citicar:{" "}
-                    <a href="https://www.autoevolution.com/news/the-american-built-citicar-was-an-ev-that-sold-by-the-thousands-in-the-1970s-169045.html">
+                    <a
+                        className="underline"
+                        href="https://www.autoevolution.com/news/the-american-built-citicar-was-an-ev-that-sold-by-the-thousands-in-the-1970s-169045.html"
+                    >
                         Vlad Radu, The American-Built CitiCar Was an EV That Sold by the Thousands in the 1970s, <em>autoevolution</em>
                     </a>
                 </p>
+                <div className="flex justify-center mt-16">
+                    <HandDrawnButton href="/">Return to home</HandDrawnButton>
+                </div>
             </Container>
         </>
     );

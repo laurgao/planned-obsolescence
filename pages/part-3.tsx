@@ -1,15 +1,15 @@
 import Image from "next/image";
 import React from "react";
-import Button from "../components/headless/Button";
+import HandDrawnButton from "../components/HandDrawnButton";
 import Container from "../components/headless/Container";
-import Part2Navbar from "../components/Part2Navbar";
+import Navbar from "../components/Navbar";
 import citicarImg from "../images/3/citicar.jpg";
 import sexyCarsImg from "../images/3/sexy-cars.png";
 
 const solutions = () => {
     return (
         <>
-            <Part2Navbar screen={false} />
+            <Navbar screen={false} />
             <Container className="py-24">
                 <div className="prose mx-auto">
                     <h1>Addressing the global problem</h1>
@@ -114,8 +114,8 @@ const solutions = () => {
                         <a href="https://www.youtube.com/watch?v=0rkTgPt3M4k">— Linus Tech Tips</a>
                     </blockquote>
                 </div>
-                <div className="flex justify-center">
-                    <Button href="/credits">The road carries on</Button>
+                <div className="flex justify-center my-12">
+                    <HandDrawnButton href="/credits">The road carries on</HandDrawnButton>
                 </div>
                 <div className="prose mx-auto">
                     <h2>Footnotes</h2>

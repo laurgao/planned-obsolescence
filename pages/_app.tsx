@@ -1,7 +1,6 @@
 import Router, { useRouter } from "next/router";
 import NProgress from "nprogress";
 import { useEffect, useState } from "react";
-import ReactModal from "react-modal";
 import Loading from "../components/Loading";
 import SEO from "../components/SEO";
 import SoundController from "../components/SoundController";
@@ -42,5 +41,3 @@ export default function App({ Component, pageProps }) {
         </>
     );
 }
-
-ReactModal.setAppElement("#app-root");

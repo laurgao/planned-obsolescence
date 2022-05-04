@@ -90,7 +90,7 @@ const WasteHeader = () => {
     }
 
     return (
-        <header className="w-full h-screen">
+        <header className="w-full h-screen overflow-x-hidden">
             <p className="absolute w-full text-center uppercase font-bold text-gray-500 text-lg" style={{ top: "15vh" }}>
                 Part 2
             </p>

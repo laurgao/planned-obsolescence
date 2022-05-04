@@ -2,47 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-.up-spinner {
-    position: absolute;
-    top: calc(50% - 0.5rem);
-    left: calc(50% - 0.5rem);
-    width: 1rem;
-    height: 1rem;
-    border-radius: 50%;
-    border: 0.2rem solid rgba(255, 255, 255, 0.3);
-    border-top-color: white;
-    animation: up-spin 1s linear infinite;
-}
-
-.up-spinner.dark {
-    border-color: rgba(0, 0, 0, 0.3);
-    border-top-color: black;
-}
-
-@keyframes up-spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
-}
-
-.parallax {
-    /* The image used */
-    background-image: url("https://www.weeklyvoice.com/wp-content/uploads/2020/12/Toronto-Waste-management-copy.jpg");
-
-    /* Set a specific height */
-    height: 250px;
-
-    /* Create the parallax scrolling effect */
-    background-attachment: fixed;
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-}
-
 .page-body>* {
     position: fixed;
     max-width: 65ch;
@@ -54,10 +13,6 @@
     position: fixed;
     max-width: 65ch;
     @apply transition
-}
-
-.rotate {
-    animation: up-spin 1s linear infinite;
 }
 
 .floating {
@@ -85,13 +40,10 @@
 }
 
 .precedes-unruly-image+div {
+    /* To get around the default max width 65 ch as a child of page-body */
     max-width: none !important;
 }
 
 .nav-item:hover+.nav-dropdown, .nav-dropdown:hover {
     display: flex
-}
-
-.credits a {
-    text-decoration: underline;
 }

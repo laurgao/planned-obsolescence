@@ -2,7 +2,7 @@ import { HomeIcon } from "@heroicons/react/solid";
 import { useEffect, useState } from "react";
 import Button from "./headless/Button";
 
-const Part2Navbar = ({ screen = true }) => {
+const Navbar = ({ screen = true }) => {
     // screen: true if we only drop down fixed menu after scrolled a whole screen
     const [isFixed, setIsFixed] = useState(false);
     useEffect(() => {
@@ -54,9 +54,12 @@ const Part2Navbar = ({ screen = true }) => {
                         </Button>
                     </div>
                 </div>
+                <Button href="/credits" className="hover:bg-gray-100 h-full flex items-center px-4 transition nav-item ml-auto">
+                    Acknowledgements
+                </Button>
             </div>
         </div>
     );
 };
 
-export default Part2Navbar;
+export default Navbar;

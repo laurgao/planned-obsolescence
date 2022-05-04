@@ -1,11 +1,11 @@
 import { HomeIcon } from "@heroicons/react/solid";
 import Image from "next/image";
 import { useEffect, useState } from "react";
-import ArticleSection2 from "../components/ArticleSection2";
 import { BlueBox } from "../components/BlueBox";
 import Filler from "../components/Filler";
 import Button from "../components/headless/Button";
 import Container from "../components/headless/Container";
+import Part1Section2 from "../components/Part1Section2";
 import bgMainImgFartherBuildings from "../images/bg/bg-buildings-farther.png";
 import bgMainImgFlipppedBuildings from "../images/bg/bg-buildings-flipped.png";
 import bgLast from "../images/bg/bg-last.png";
@@ -158,6 +158,9 @@ export default function Home() {
                             </Button>
                         </div>
                     </div>
+                    <Button href="/credits" className="h-full flex items-center px-4 transition hover:bg-opacity-20 hover:bg-gray-50">
+                        Acknowledgements
+                    </Button>
                 </div>
             </div>
             {nWindowsScrolled > 3 ? (
@@ -273,7 +276,7 @@ export default function Home() {
                         </p>
                     </div>
                     <BlueBox nWindowsScrolled={nWindowsScrolled} />
-                    <ArticleSection2 nWindowsScrolled={nWindowsScrolled} BgImage={BgImage} />
+                    <Part1Section2 nWindowsScrolled={nWindowsScrolled} BgImage={BgImage} />
                 </article>
                 <Filler nScreens={nScreens} />
             </Container>

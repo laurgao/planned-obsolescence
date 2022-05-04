@@ -1,8 +1,8 @@
 import Image from "next/image";
 import React from "react";
-import Button from "../components/headless/Button";
+import HandDrawnButton from "../components/HandDrawnButton";
 import Container from "../components/headless/Container";
-import Part2Navbar from "../components/Part2Navbar";
+import Navbar from "../components/Navbar";
 import WasteHeader from "../components/WasteHeader";
 import threeRsImg from "../images/2/reduce_reuse_recycle.png";
 import calendarImg from "../images/2/Toronto-Waste-management.jpg";
@@ -12,8 +12,8 @@ const Waste = () => {
     return (
         <div>
             <WasteHeader />
-            <Part2Navbar />
-            <Container className="overflow-x-hidden pb-24" id="container">
+            <Navbar />
+            <Container className="pb-24" id="container">
                 <div className="prose mx-auto">
                     <p>
                         When I hear about global warming, the first thing that pops into my mind is carbon dioxide emissions and energy usage—oil,
@@ -148,8 +148,8 @@ const Waste = () => {
                         and hope others are doing the same? That doesn't sound very promising, does it.
                     </p>
                 </div>
-                <div className="flex justify-center">
-                    <Button href="/part-3">Part 3: The larger, global problem</Button>
+                <div className="flex justify-center mt-16">
+                    <HandDrawnButton href="/part-3">Part 3: The larger, global problem</HandDrawnButton>
                 </div>
             </Container>
         </div>

@@ -26,7 +26,7 @@ const scaleToBlurSign = (scale) => {
     return blurValue;
 };
 
-const ArticleSection2 = ({ nWindowsScrolled, BgImage }: { nWindowsScrolled: number; BgImage }) => {
+const Part1Section2 = ({ nWindowsScrolled, BgImage }: { nWindowsScrolled: number; BgImage }) => {
     const content: ((scale: number) => [ReactNode, boolean | number])[] = [
         (scale: number) => [
             <p style={{ transform: `scale(${scale})`, opacity: scaleToOpacity(scale) }}>
@@ -277,4 +277,4 @@ const ArticleSection2 = ({ nWindowsScrolled, BgImage }: { nWindowsScrolled: numb
     );
 };
 
-export default ArticleSection2;
+export default Part1Section2;

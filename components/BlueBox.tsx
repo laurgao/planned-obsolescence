@@ -94,7 +94,7 @@ export const BlueBox = ({ nWindowsScrolled }) => {
             <p>
                 <strong>Planned Obsolescence, Price Collusion, and Monopolies</strong>
             </p>
-            <p id="44395367-6103-4e70-84bd-0c5e94d14306" className="-mt-5 opacity-80 text-sm">
+            <p className="-mt-5 opacity-80 text-sm">
                 <em>3 practices that capitalism suckers hate</em>
             </p>
             <p>
