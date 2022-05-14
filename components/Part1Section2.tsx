@@ -58,7 +58,7 @@ const Part1Section2 = ({ nWindowsScrolled, BgImage }: { nWindowsScrolled: number
                     <div className="precedes-unruly-image"></div>
                     <BgImage src={joshua0} scale={imgScale} blurValue={scaleToBlurSign(imgScale)} zIndex="-2" />
                     <p style={{ transform: `scale(${scale})`, opacity: scaleToOpacity(scale) }}>
-                        Year: 2005. Joshua buys a new Acer laptop, it weights around 10 pounds.
+                        Year: 2005. Joshua buys a new Acer laptop, it weighs around 10 pounds.
                     </p>
                 </>,
                 500,
