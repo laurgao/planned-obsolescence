@@ -2,6 +2,8 @@
 
 Check it out!! [https://planned-obsolescence.vercel.app/](https://planned-obsolescence.vercel.app/)
 
+![](homepage-ss.png)
+
 ## Development
 
 This website is built with Next.js (a React.js framework), typescript, tailwindcss, and p5.js.
