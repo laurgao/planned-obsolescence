@@ -7,9 +7,9 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { BlueBox } from "../components/BlueBox";
 import Filler from "../components/Filler";
+import Part1Section2 from "../components/Part1Section2";
 import Button from "../components/headless/Button";
 import Container from "../components/headless/Container";
-import Part1Section2 from "../components/Part1Section2";
 import bgMainImgFartherBuildings from "../images/bg/bg-buildings-farther.png";
 import bgMainImgFlipppedBuildings from "../images/bg/bg-buildings-flipped.png";
 import bgLast from "../images/bg/bg-last.png";
@@ -132,6 +132,7 @@ export default function Home() {
                         <Button
                             href="/part-2"
                             className="h-full flex items-center px-4 transition nav-item ml-auto hover:bg-opacity-20 hover:bg-gray-50"
+                            childClassName="whitespace-nowrap"
                             style={{ width: 42.69 + 32 }} // the width found experimentally, not responsive to change in button content so not ideal.
                         >
                             Part 2
@@ -145,6 +146,7 @@ export default function Home() {
                         <Button
                             href="/part-3"
                             className="h-full flex items-center px-4 transition nav-item ml-auto hover:bg-opacity-20 hover:bg-gray-50"
+                            childClassName="whitespace-nowrap"
                             style={{ width: 42.69 + 32 }} // the width found experimentally, not responsive to change in button content so not ideal.
                         >
                             Part 3
@@ -204,10 +206,10 @@ export default function Home() {
                                 i < threshold
                                     ? bgMainImg
                                     : i === threshold
-                                    ? bgMainImgFlipppedBuildings
-                                    : i === nBgImages - 1
-                                    ? bgLast
-                                    : bgMainImgFartherBuildings
+                                        ? bgMainImgFlipppedBuildings
+                                        : i === nBgImages - 1
+                                            ? bgLast
+                                            : bgMainImgFartherBuildings
                             }
                             priority={i === 0 ? true : false}
                             scale={currImgScale}
